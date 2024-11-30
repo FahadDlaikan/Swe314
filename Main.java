@@ -1,3 +1,5 @@
+
+public class Main {
 public static void main(String[] args) {
     // Initialize the database
     BankDatabase database = new BankDatabase();
@@ -10,4 +12,5 @@ public static void main(String[] args) {
 
     // Start the CLI
     cli.start();
+ }
 }
