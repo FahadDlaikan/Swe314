@@ -1,14 +1,14 @@
 
 public class User {
     private String username;
-    private String password; // Stored securely (hashed in real scenarios)
+    private String password; // Stored as encrypted text
     private String name;
     private double balance;
     private String transactionHistory;
 
     public User(String username, String password, String name, double balance) {
         this.username = username;
-        this.password = password;
+        this.password = password;// the encrypted password
         this.name = name;
         this.balance = balance;
         this.transactionHistory = "No transactions yet.";
@@ -18,8 +18,11 @@ public class User {
         return username;
     }
 
-    public boolean authenticate(String password) {
-        return this.password.equals(password);
+    public boolean authenticate(String inputPassword) {
+        Vigenere vigenereCipher = new Vigenere();
+        String decryptedPassword = vigenereCipher.decrypt(this.password, "BANKKEY");
+//        System.out.println("Decrypted Password (Debug): " + decryptedPassword); // Debug
+        return decryptedPassword.equals(inputPassword);
     }
 
     public String getName() {
@@ -42,5 +45,4 @@ public class User {
         this.transactionHistory += "\n" + transaction;
     }
 }
-
 

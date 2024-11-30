@@ -6,7 +6,7 @@ public class BankDatabase {
 
     public BankDatabase() {
         this.users = new HashMap<>();
-        addUser(new User("john_doe", "password123", "John Doe", 1000.00));
+
     }
 
     public void addUser(User user) {
@@ -19,4 +19,5 @@ public class BankDatabase {
     public boolean  isUsernameTaken(String username) {
         return users.containsKey(username);
     }
+
 }
