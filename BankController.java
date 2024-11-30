@@ -1,14 +1,15 @@
 
+// BankController.java
 public class BankController {
-    private BankDatabase database;
+    private BankDatabase dataBase;
     private User currentUser;
 
     public BankController(BankDatabase database) {
-        this.database = database;
+        this.dataBase = database;
     }
 
     public boolean login(String username, String password) {
-        User user = database.getUser(username);
+        User user = dataBase.getUser(username);
         if (user != null && user.authenticate(password)) {
             this.currentUser = user;
             return true;
@@ -38,7 +39,7 @@ public class BankController {
     }
 
     public boolean transferMoney(String recipientUsername, double amount) {
-        User recipient = database.getUser(recipientUsername);
+        User recipient = dataBase.getUser(recipientUsername);
         if (recipient != null && currentUser.getBalance() >= amount) {
             currentUser.updateBalance(-amount);
             recipient.updateBalance(amount);
@@ -48,4 +49,14 @@ public class BankController {
         }
         return false;
     }
+
+
+    public boolean registerUser(String username, String password, String name, double balance) {
+        if (!dataBase.isUsernameTaken(username)) { // Check if username is unique
+            dataBase.addUser(new User(username, password, name, balance));
+            return true;
+        }
+        return false; // Username is already taken
+    }
+
 }

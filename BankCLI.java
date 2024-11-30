@@ -1,4 +1,5 @@
 
+// BankCLI.java
 import java.util.Scanner;
 
 public class BankCLI {
@@ -12,17 +13,26 @@ public class BankCLI {
 
     public void start() {
         while (true) {
-            System.out.println("Welcome to the Bank System");
+            System.out.println("\nWelcome to the Bank System");
             System.out.println("1. Login");
-            System.out.println("2. Exit");
+            System.out.println("2. Register New User");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume newline
 
-            if (choice == 1) {
-                login();
-            } else if (choice == 2) {
-                System.out.println("Goodbye!");
-                break;
+            switch (choice) {
+                case 1 :
+                    login();
+                case 2 :
+                    registerUser();
+                case 3 :
+                {
+                    System.out.println("Goodbye!");
+                    return;
+                }
+                default :
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
@@ -41,21 +51,43 @@ public class BankCLI {
         }
     }
 
+    private void registerUser() {
+        System.out.print("Enter a new username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter a new password: ");
+        String password = scanner.nextLine();
+        System.out.print("Enter your full name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter an initial deposit amount: ");
+        double balance = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (controller.registerUser(username, password, name, balance)) {
+            System.out.println("User registered successfully! You can now log in.");
+        } else {
+            System.out.println("Registration failed. Username might already be taken.");
+        }
+    }
+
     private void dashboard() {
         while (true) {
+            System.out.println("\nDashboard");
             System.out.println("1. View Profile");
             System.out.println("2. View Transaction History");
             System.out.println("3. Pay Bill");
             System.out.println("4. Transfer Money");
             System.out.println("5. Logout");
-
+            System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume newline
 
             switch (choice) {
-                case 1 -> System.out.println(controller.getProfile());
-                case 2 -> System.out.println(controller.getTransactionHistory());
-                case 3 -> {
+                case 1 :
+                    System.out.println(controller.getProfile());
+                case 2 :
+                    System.out.println(controller.getTransactionHistory());
+                case 3 :
+                {
                     System.out.print("Enter amount: ");
                     double amount = scanner.nextDouble();
                     scanner.nextLine();
@@ -67,7 +99,8 @@ public class BankCLI {
                         System.out.println("Insufficient balance.");
                     }
                 }
-                case 4 -> {
+                case 4 :
+                {
                     System.out.print("Enter recipient username: ");
                     String recipient = scanner.nextLine();
                     System.out.print("Enter amount: ");
@@ -79,20 +112,16 @@ public class BankCLI {
                         System.out.println("Transfer failed. Check balance or recipient details.");
                     }
                 }
-                case 5 -> {
+                case 5 :
+                {
                     controller.logout();
                     System.out.println("Logged out.");
                     return;
                 }
-                default -> System.out.println("Invalid option.");
+                default :
+                    System.out.println("Invalid option. Please try again.");
             }
         }
     }
-
-    public static void main(String[] args) {
-        BankDatabase database = new BankDatabase();
-        BankController controller = new BankController(database);
-        BankCLI cli = new BankCLI(controller);
-        cli.start();
-    }
 }
+
