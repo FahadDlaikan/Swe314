@@ -25,12 +25,13 @@ public class BankController {
     // When authenticating, decrypt the password for comparison
     public boolean login(String username, String password) {
         User user = database.getUser(username);
-        if (user != null && user.authenticate(password)) {
+        if (user != null && user.authenticate(password, "BANKKEY")) { // Encrypt and compare
             currentUser = user;
             return true;
         }
-        return false; // issue
+        return false; // Invalid credentials
     }
+
 
     public void logout() {
         currentUser = null;
