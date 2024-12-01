@@ -11,7 +11,11 @@ public class Main {
     BankCLI cli = new BankCLI(controller);
 
     // Start the CLI
-    cli.start();
+        try {
+            cli.start();
+        }catch (Exception e){
+            System.out.println("Incorrect input, Please try again");
+        }
  }
 }
 
