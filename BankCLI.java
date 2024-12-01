@@ -63,19 +63,9 @@ public class BankCLI {
         String password = scanner.nextLine();
         System.out.print("Enter your full name: ");
         String name = scanner.nextLine();
-
-        double balance = -1; // Initialize with an invalid value
-        while (balance < 0) {
-            System.out.print("Enter an initial deposit amount: ");
-            try {
-                balance = Double.parseDouble(scanner.nextLine());
-                if (balance < 0) {
-                    System.out.println("Error: Balance cannot be negative. Please try again.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Invalid input. Please enter a numeric value.");
-            }
-        }
+        System.out.print("Enter an initial deposit amount: ");
+        double balance = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline
 
         if (controller.registerUser(username, password, name, balance)) {
             System.out.println("User registered successfully!");
@@ -84,7 +74,6 @@ public class BankCLI {
             System.out.println("Registration failed. Username might already be taken.");
         }
     }
-
 
     private void postRegistrationMenu() {
         while (true) {
