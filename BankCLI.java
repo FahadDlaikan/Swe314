@@ -1,3 +1,5 @@
+
+
 import java.util.Scanner;
 
 public class BankCLI {
@@ -59,13 +61,31 @@ public class BankCLI {
     private void registerUser() {
         System.out.print("Enter a new username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter a new password: ");
-        String password = scanner.nextLine();
+        String password;
+        while (true) {
+            System.out.print("Enter a new password: ");
+            password = scanner.nextLine();
+            if (isValidPassword(password)) {
+                break;
+            } else {
+                System.out.println("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.");
+            }
+        }
         System.out.print("Enter your full name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter an initial deposit amount: ");
-        double balance = scanner.nextDouble();
-        scanner.nextLine(); // Consume newline
+
+        double balance = -1; // Initialize with an invalid value
+        while (balance < 0) {
+            System.out.print("Enter an initial deposit amount: ");
+            try {
+                balance = Double.parseDouble(scanner.nextLine());
+                if (balance < 0) {
+                    System.out.println("Error: Balance cannot be negative. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Invalid input. Please enter a numeric value.");
+            }
+        }
 
         if (controller.registerUser(username, password, name, balance)) {
             System.out.println("User registered successfully!");
@@ -73,6 +93,15 @@ public class BankCLI {
         } else {
             System.out.println("Registration failed. Username might already be taken.");
         }
+    }
+
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 &&
+                password.matches(".*[A-Z].*") && // At least one uppercase letter
+                password.matches(".*[a-z].*") && // At least one lowercase letter
+                password.matches(".*\\d.*") &&  // At least one digit
+                password.matches(".*[!@#$%^&*()_+\"\\[\\]{}|;:'<>,./?`~\\-].*"); // At least one special character
     }
 
     private void postRegistrationMenu() {
