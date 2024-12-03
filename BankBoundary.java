@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
-public class BankCLI {
+public class BankBoundary {
     private BankController controller;
     public Scanner scanner;
 
-    public BankCLI(BankController controller) {
+    public BankBoundary(BankController controller) {
         this.controller = controller;
         this.scanner = new Scanner(System.in);
     }

@@ -7,7 +7,7 @@ public class Main {
         BankController controller = new BankController(database);
 
         // Initialize the CLI (command-line interface) with the controller
-        BankCLI cli = new BankCLI(controller);
+        BankBoundary cli = new BankBoundary(controller);
 
         // Start the CLI
         try {
