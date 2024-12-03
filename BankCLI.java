@@ -1,3 +1,5 @@
+
+
 import java.util.Scanner;
 
 public class BankCLI {
@@ -104,6 +106,14 @@ public class BankCLI {
                 password.matches(".*[a-z].*") &&
                 password.matches(".*\\d.*") &&
                 password.matches(".*[!@#$%^&*()_+\"\\[\\]{}|;:'<>,./?`~-].*");
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 &&
+                password.matches(".*[A-Z].*") && // At least one uppercase letter
+                password.matches(".*[a-z].*") && // At least one lowercase letter
+                password.matches(".*\\d.*") &&  // At least one digit
+                password.matches(".*[!@#$%^&*()_+\"\\[\\]{}|;:'<>,./?`~\\-].*"); // At least one special character
     }
 
     private void postRegistrationMenu() {
