@@ -3,7 +3,6 @@ public class User {
     private String password; // Encrypted password
     private String name;
     private double balance;
-
     private StringBuilder transactionHistory;
     private String securityQuestion;
     private String securityAnswer; // Stored in plain text for simplicity

@@ -1,4 +1,3 @@
-
 public class BankController {
     private BankDatabase database;
     private User currentUser;
