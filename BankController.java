@@ -1,5 +1,4 @@
 
-// BankController.java
 public class BankController {
     private BankDatabase database;
     private User currentUser;
@@ -10,28 +9,30 @@ public class BankController {
         this.vigenereCipher = new Vigenere();
     }
 
-    // When registering, encrypt the password
-    public boolean registerUser(String username, String password, String name, double balance) {
+    public boolean registerUser(String username, String password, String name, double balance, String securityQuestion,
+                                String securityAnswer) {
         if (!database.isUsernameTaken(username)) {
-            // Encrypt password
             String encryptedPassword = vigenereCipher.encrypt(password, "BANKKEY");
-            System.out.println("Encrypted Password (Debug): " + encryptedPassword); // Debug
-            database.addUser(new User(username, encryptedPassword, name, balance));
+            database.addUser(new User(username, encryptedPassword, name, balance, securityQuestion, securityAnswer));
             return true;
         }
-        return false;// means the username is taken
+        return false;
     }
 
-    // When authenticating, decrypt the password for comparison
     public boolean login(String username, String password) {
         User user = database.getUser(username);
-        if (user != null && user.authenticate(password, "BANKKEY")) { // Encrypt and compare
-            currentUser = user;
-            return true;
+        if (user != null && user.authenticate(password, "BANKKEY")) {
+            System.out.println("Security Question: " + user.getSecurityQuestion());
+            System.out.print("Answer: ");
+            String answer = new java.util.Scanner(System.in).nextLine();
+            if (user.verifySecurityAnswer(answer)) {
+                currentUser = user;
+                return true;
+            }
+            System.out.println("Incorrect answer to security question.");
         }
-        return false; // Invalid credentials
+        return false;
     }
-
 
     public void logout() {
         currentUser = null;
@@ -46,15 +47,24 @@ public class BankController {
     }
 
     public boolean payBill(double amount, String billDetails) {
+        if (amount <= 0) {
+            System.out.println("Error: Amount must be greater than zero.");
+            return false;
+        }
         if (currentUser.getBalance() >= amount) {
             currentUser.updateBalance(-amount);
             currentUser.addTransaction("Paid $" + amount + " for " + billDetails);
             return true;
         }
+        System.out.println("Error: Insufficient balance.");
         return false;
     }
 
     public boolean transferMoney(String recipientUsername, double amount) {
+        if (amount <= 0) {
+            System.out.println("Error: Amount must be greater than zero.");
+            return false;
+        }
         User recipient = database.getUser(recipientUsername);
         if (recipient != null && currentUser.getBalance() >= amount) {
             currentUser.updateBalance(-amount);
@@ -63,7 +73,11 @@ public class BankController {
             recipient.addTransaction("Received $" + amount + " from " + currentUser.getUsername());
             return true;
         }
+        if (recipient == null) {
+            System.out.println("Error: Recipient not found.");
+        } else {
+            System.out.println("Error: Insufficient balance.");
+        }
         return false;
     }
-
 }

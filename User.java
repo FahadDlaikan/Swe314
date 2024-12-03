@@ -4,13 +4,17 @@ public class User {
     private String name;
     private double balance;
     private StringBuilder transactionHistory;
+    private String securityQuestion;
+    private String securityAnswer; // Stored in plain text for simplicity
 
-    public User(String username, String password, String name, double balance) {
+    public User(String username, String password, String name, double balance, String securityQuestion, String securityAnswer) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.balance = balance;
         this.transactionHistory = new StringBuilder();
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
     }
 
     public String getUsername() {
@@ -29,6 +33,14 @@ public class User {
         return transactionHistory.toString();
     }
 
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public boolean verifySecurityAnswer(String answer) {
+        return this.securityAnswer.equals(answer);
+    }
+
     public void updateBalance(double amount) {
         this.balance += amount;
     }
@@ -37,7 +49,6 @@ public class User {
         transactionHistory.append(transaction).append("\n");
     }
 
-    // Updated authenticate method
     public boolean authenticate(String enteredPassword, String encryptionKey) {
         Vigenere vigenereCipher = new Vigenere();
         String encryptedEnteredPassword = vigenereCipher.encrypt(enteredPassword, encryptionKey);

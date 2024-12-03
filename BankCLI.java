@@ -22,10 +22,10 @@ public class BankCLI {
             switch (choice) {
                 case 1:
                     login();
-                    break; // Add break to avoid fall-through
+                    break;
                 case 2:
                     registerUser();
-                    break; // Add break to avoid fall-through
+                    break;
                 case 3:
                     System.out.println("Goodbye!");
                     return;
@@ -46,10 +46,10 @@ public class BankCLI {
             if (controller.login(username, password)) {
                 System.out.println("Login successful!");
                 dashboard();
-                return; // Exit the loop after successful login
+                return;
             } else {
                 attempts++;
-                System.out.println("Invalid credentials. You have " + (3 - attempts) + " attempt(s) remaining.");
+                System.out.println("Invalid credentials or incorrect answer to the security question. You have " + (3 - attempts) + " attempt(s) remaining.");
             }
         }
 
@@ -59,12 +59,20 @@ public class BankCLI {
     private void registerUser() {
         System.out.print("Enter a new username: ");
         String username = scanner.nextLine();
-        System.out.print("Enter a new password: ");
-        String password = scanner.nextLine();
+        String password;
+        while (true) {
+            System.out.print("Enter a new password: ");
+            password = scanner.nextLine();
+            if (isValidPassword(password)) {
+                break;
+            } else {
+                System.out.println("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.");
+            }
+        }
         System.out.print("Enter your full name: ");
         String name = scanner.nextLine();
 
-        double balance = -1; // Initialize with an invalid value
+        double balance = -1;
         while (balance < 0) {
             System.out.print("Enter an initial deposit amount: ");
             try {
@@ -77,7 +85,12 @@ public class BankCLI {
             }
         }
 
-        if (controller.registerUser(username, password, name, balance)) {
+        System.out.print("Choose a security question: ");
+        String securityQuestion = scanner.nextLine();
+        System.out.print("Enter your answer to the security question: ");
+        String securityAnswer = scanner.nextLine();
+
+        if (controller.registerUser(username, password, name, balance, securityQuestion, securityAnswer)) {
             System.out.println("User registered successfully!");
             postRegistrationMenu();
         } else {
@@ -85,6 +98,13 @@ public class BankCLI {
         }
     }
 
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 &&
+                password.matches(".*[A-Z].*") &&
+                password.matches(".*[a-z].*") &&
+                password.matches(".*\\d.*") &&
+                password.matches(".*[!@#$%^&*()_+\"\\[\\]{}|;:'<>,./?`~-].*");
+    }
 
     private void postRegistrationMenu() {
         while (true) {
@@ -99,15 +119,12 @@ public class BankCLI {
             switch (choice) {
                 case 1:
                     login();
-                    return; // Exit the loop after login
-
+                    return;
                 case 2:
                     registerUser();
-                    return; // Exit the loop to avoid nested menus
-
+                    return;
                 case 3:
-                    return; // Exit the loop and return to the main menu
-
+                    return;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
@@ -131,10 +148,10 @@ public class BankCLI {
             switch (choice) {
                 case 1:
                     System.out.println(controller.getProfile());
-                    break; // Add break to avoid fall-through
+                    break;
                 case 2:
                     System.out.println(controller.getTransactionHistory());
-                    break; // Add break to avoid fall-through
+                    break;
                 case 3:
                     System.out.print("Enter amount: ");
                     amount = scanner.nextDouble();
@@ -146,7 +163,7 @@ public class BankCLI {
                     } else {
                         System.out.println("Insufficient balance.");
                     }
-                    break; // Add break to avoid fall-through
+                    break;
                 case 4:
                     System.out.print("Enter recipient username: ");
                     String recipient = scanner.nextLine();
@@ -158,11 +175,11 @@ public class BankCLI {
                     } else {
                         System.out.println("Transfer failed. Check balance or recipient details.");
                     }
-                    break; // Add break to avoid fall-through
+                    break;
                 case 5:
                     controller.logout();
                     System.out.println("Logged out.");
-                    return; // Exit the loop after logout
+                    return;
                 default:
                     System.out.println("Invalid option. Please try again.");
             }
